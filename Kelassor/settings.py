@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -136,4 +137,28 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=4), 
+}
+
+
+AUTH_USER_MODEL = 'account.CustomUserManager'
+
+
+
+KAVENEGAR_API_KEY = config('KAVENEGAR_API_KEY')
+KAVENEGAR_SENDER = config('KAVENEGAR_SENDER')
+
+
+KAVENEGAR_API_KEY = config('KAVENEGAR_API_KEY')
+KAVENEGAR_SENDER = config('KAVENEGAR_SENDER')
+
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1", 
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
