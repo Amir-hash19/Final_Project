@@ -19,18 +19,18 @@ class Blog(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True)
-    images = models.ImageField(upload_to='/picture/blog')
-                
+    
+
     STATUS_CHOICES = (
         ("draft", "Draft"),
         ("published", "Published")
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
-    categoryblog = models.ForeignKey(to=CategoryBlog, on_delete=models.CASCADE, null=True, blank=True)
+    blogcategory = models.ForeignKey(to=CategoryBlog, on_delete=models.CASCADE, null=True, blank=True)
 
 
     def __str__(self):
-        return self.title
+        return f"{self.title} - {self.status}"
 
 
 

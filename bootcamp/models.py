@@ -6,7 +6,7 @@ from django.db import models
 
 
 class BootcampCategory(models.Model):
-    bootcamp = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True)
 
 
@@ -35,8 +35,8 @@ class Bootcamp(models.Model):
     is_online = models.BooleanField(default=True)
     capacity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=3)
-    instructor = models.ManyToManyField(to=CustomUser, name="teachers")
-    bootcampcategory = models.ForeignKey(to=BootcampCategory, on_delete=models.CASCADE, null=True, name="category")
+    instructor = models.ManyToManyField(to=CustomUser, related_name="teachers")
+    category = models.ForeignKey(to=BootcampCategory, on_delete=models.CASCADE, null=True ,related_name="bootcamp_list")
     created_at = models.DateField(auto_now_add=True)
     hours = models.CharField(max_length=50)
     days = models.CharField(200)

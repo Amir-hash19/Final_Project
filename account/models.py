@@ -20,7 +20,10 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", False)
 
         user = self.model(phone=phone, **extra_fields)
-        user.set_password(password)
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()    
         user.save(using=self._db)
         return user
 
@@ -50,7 +53,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     birthday = models.DateField()
-    about_me = models.TextField(default=f"Hi my name is {first_name}")
+    about_me = models.TextField(null=True, blank=True)
 
     national_id = models.CharField(
         max_length=10,
@@ -72,11 +75,32 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('admin', 'Admin'),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
+    SUPPORT_SUB_ROLE_CHOICES = (
+        ("technical_support", "Technical Support"),
+        ("ticket_service", "Ticket Service"),
+        ("billing_support", "Billing Support"),
+        ("blog_support", "Blog Support"),
+    )
+
+    
+    sub_role = models.CharField(max_length=50, choices=SUPPORT_SUB_ROLE_CHOICES, null=True, blank=True)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'phone'  # برای کاربران عادی
     REQUIRED_FIELDS = ['username', 'email']  # برای createsuperuser
+
+
+
+    def save(self, *args, **kwargs):
+        if self.role != 'support' and self.sub_role:
+            self.sub_role = None  
+
+        super().save(*args, **kwargs)  
+
+
+    
+
 
     def __str__(self):
         return self.username or str(self.phone) or self.email or "User"
@@ -85,3 +109,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 
+
+
+        

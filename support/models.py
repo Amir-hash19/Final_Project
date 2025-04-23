@@ -31,6 +31,7 @@ class Ticket(models.Model):
 class TicketMessage(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     attachment = models.FileField(upload_to='ticket_attachments/', null=True, blank=True)
     slug = models.SlugField(unique=True)
