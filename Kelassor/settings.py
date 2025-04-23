@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'billing.apps.BillingConfig',
     'blog.apps.BlogConfig',
     'bootcamp.apps.BootcampConfig',
-    'enrollments.apps.EnrollmentsConfig',
     'support.apps.SupportConfig',
 ]
 
@@ -130,7 +129,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',  # استفاده از JWT
-    ]
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'account.throttling.OTPThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'otp': '3/hour',
+    }
 }    
 
 
@@ -140,7 +145,7 @@ SIMPLE_JWT = {
 }
 
 
-AUTH_USER_MODEL = 'account.CustomUserManager'
+AUTH_USER_MODEL = 'aacount.CustomUser'
 
 
 

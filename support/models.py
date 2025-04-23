@@ -18,7 +18,9 @@ class Ticket(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     bootcamp = models.ForeignKey(to=Bootcamp, null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=TICKET_STATUS_CHOICES)
+    status = models.CharField(max_length=20, choices=TICKET_STATUS_CHOICES, default="pending")
+    slug = models.SlugField(unique=True)
+    
 
     def __str__(self):
         return self.title
@@ -29,9 +31,9 @@ class Ticket(models.Model):
 class TicketMessage(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     attachment = models.FileField(upload_to='ticket_attachments/', null=True, blank=True)
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.created_at

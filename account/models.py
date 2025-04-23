@@ -49,6 +49,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    birthday = models.DateField()
+    about_me = models.TextField(default=f"Hi my name is {first_name}")
 
     national_id = models.CharField(
         max_length=10,
@@ -64,6 +66,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
    
     ROLE_CHOICES = (
+        ("teacher", "Teacher"),
         ('student', 'Student'),
         ('support', 'Support'),
         ('admin', 'Admin'),
@@ -77,3 +80,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username or str(self.phone) or self.email or "User"
+
+
+
+
+

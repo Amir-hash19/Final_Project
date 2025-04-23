@@ -1,3 +1,55 @@
 from django.db import models
+from account.models import CustomUser
 
-# Create your models here.
+
+
+
+class Invoice(models.Model):
+    client = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=12, decimal_places=3)
+    deadline = models.DateField()
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Invoice #{self.id} for {self.user.username}"
+
+
+
+
+class Payment(models.Model):
+    PAYMENT_METHODS = [
+        ('online', 'Online Gateway'),
+        ('offline', 'Offline Transfer')
+    ]
+    
+    user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="payments")
+    method = models.CharField(max_length=10, choices=PAYMENT_METHODS)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    paid_at = models.DateTimeField(auto_now_add=True)
+    is_verified = models.BooleanField(default=False)
+
+    # Only for offline
+    tracking_code = models.CharField(max_length=100, blank=True, null=True)
+    receipt_image = models.ImageField(upload_to='receipts/', blank=True, null=True)
+
+
+    def __str__(self):
+        return self.is_verified
+
+
+
+
+
+class Transaction(models.Model):
+    user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    description = models.TextField(blank=True)
+    transaction_date = models.DateTimeField(auto_now_add=True)
+    transaction_type = models.CharField(max_length=10, choices=[('credit', 'Credit'), ('debit', 'Debit')])
+    is_verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.is_verified
