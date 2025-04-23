@@ -11,7 +11,7 @@ class BootcampCategory(models.Model):
 
 
     def __str__(self):
-        return f"{self.bootcamp}"
+        return f"{self.name}"
 
 
 
@@ -34,12 +34,12 @@ class Bootcamp(models.Model):
     status = models.CharField(max_length=20, choices=BOOTCAMP_STATUS_CHOICES, default="draft")
     is_online = models.BooleanField(default=True)
     capacity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=3)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     instructor = models.ManyToManyField(to=CustomUser, related_name="teachers")
     category = models.ForeignKey(to=BootcampCategory, on_delete=models.CASCADE, null=True ,related_name="bootcamp_list")
     created_at = models.DateField(auto_now_add=True)
     hours = models.CharField(max_length=50)
-    days = models.CharField(200)
+    days = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
 
 
@@ -76,4 +76,4 @@ class BootcampRegistration(models.Model):
 
 
     def __str__(self):
-        return self.comment
+        return f"{self.status}"

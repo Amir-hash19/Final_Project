@@ -1,3 +1,8 @@
 from django.contrib import admin
+from .models import BootcampCategory, Bootcamp, BootcampRegistration
 
-# Register your models here.
+
+
+admin.site.register(Bootcamp)
+admin.site.register(BootcampCategory)
+admin.site.register(BootcampRegistration)

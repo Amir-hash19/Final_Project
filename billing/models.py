@@ -13,7 +13,7 @@ class Invoice(models.Model):
     is_paid = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Invoice #{self.id} for {self.user.username}"
+        return f"{self.amount}"
 
 
 
@@ -37,7 +37,7 @@ class Payment(models.Model):
 
 
     def __str__(self):
-        return self.is_verified
+        return self.method
 
 
 
@@ -52,4 +52,4 @@ class Transaction(models.Model):
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.is_verified
+        return f"{self.transaction_type}"

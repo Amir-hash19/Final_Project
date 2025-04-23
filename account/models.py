@@ -48,12 +48,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True, null=True, blank=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=80)
-    phone = PhoneNumberField(unique=True)
+    phone = PhoneNumberField(unique=True,region="IR")
     email = models.EmailField(unique=True, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    birthday = models.DateField()
+    birthday = models.DateField(null=True, blank=True)
     about_me = models.TextField(null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     national_id = models.CharField(
         max_length=10,
@@ -87,8 +88,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'phone'  # برای کاربران عادی
-    REQUIRED_FIELDS = ['username', 'email']  # برای createsuperuser
+    USERNAME_FIELD = 'username'  # برای کاربران عادی
+    REQUIRED_FIELDS = ['phone', 'email']  # برای createsuperuser
 
 
 

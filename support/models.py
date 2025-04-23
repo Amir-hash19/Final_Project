@@ -23,7 +23,7 @@ class Ticket(models.Model):
     
 
     def __str__(self):
-        return self.title
+        return f"{self.title}"
 
 
 
@@ -37,4 +37,4 @@ class TicketMessage(models.Model):
     slug = models.SlugField(unique=True)
 
     def __str__(self):
-        return self.created_at
+        return f"{self.slug}"
