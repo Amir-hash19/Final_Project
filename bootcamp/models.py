@@ -49,14 +49,6 @@ class Bootcamp(models.Model):
 
 
 class BootcampRegistration(models.Model):
-
-    REGISTRATION_STATUS_CHOICES = (
-    ('pending', 'Pending'),
-    ('reviewing', 'Reviewing'),
-    ('approved', 'Approved'),
-    ('rejected', 'Rejected'),
-)
-
     volunteer = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, name="student")
     bootcamp = models.ForeignKey(to=Bootcamp, on_delete=models.CASCADE, name="bootcamp")
 
@@ -67,11 +59,18 @@ class BootcampRegistration(models.Model):
     )
     payment_type = models.CharField(max_length=30, choices=PAYMENT_STATUS_CHOICES, default="check")
     registered_at = models.DateTimeField(auto_now_add=True)
+
+    REGISTRATION_STATUS_CHOICES = (
+    ('pending', 'Pending'),
+    ('reviewing', 'Reviewing'),
+    ('approved', 'Approved'),
+    ('rejected', 'Rejected'),
+)
     status = models.CharField(max_length=20, choices=REGISTRATION_STATUS_CHOICES, default="pending")
     reviewed_at = models.DateTimeField(null=True, blank=True)
     reviewed_by = models.ForeignKey(to=CustomUser, null=True, blank=True, on_delete=models.SET_NULL, related_name='reviewed_enrollments')
     comment = models.TextField(blank=True)
-    phone_number = PhoneNumberField(region='IR', null=True, blank=True)
+    phone_number = PhoneNumberField(region='IR', unique=True)
     slug = models.SlugField(unique=True)
 
 
