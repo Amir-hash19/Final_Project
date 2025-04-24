@@ -130,12 +130,12 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',  # استفاده از JWT
     ],
-    'DEFAULT_THROTTLE_CLASSES': [
-        'account.throttling.OTPThrottle',
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'otp': '3/hour',
-    }
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'account.throttling.OTPThrottle',
+    # ],
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'otp': '3/hour',
+    # }
 }    
 
 
