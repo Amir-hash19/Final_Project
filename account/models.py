@@ -1,4 +1,4 @@
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin, Group
 from phonenumber_field.modelfields import PhoneNumberField
 from django.core.validators import RegexValidator
 from django.db import models
@@ -85,6 +85,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     
     sub_role = models.CharField(max_length=50, choices=SUPPORT_SUB_ROLE_CHOICES, null=True, blank=True)
+    
 
     objects = CustomUserManager()
 
