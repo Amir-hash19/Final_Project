@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import Group
 from .models import CustomUser
-from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.serializerfields import PhoneNumberField
 
 
 
@@ -42,4 +42,11 @@ class CreateStudentSerializer(serializers.ModelSerializer):
 
 
 class OTPSerializer(serializers.Serializer):
-    phone = PhoneNumberField(unique=True,region="IR")
+    phone = PhoneNumberField(region="IR")
+
+
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['phone'] = str(instance.phone)
+        return representation

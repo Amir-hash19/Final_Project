@@ -36,11 +36,11 @@ class RegisterAccountView(APIView):
 
 
 class SendOTPView(APIView):
-
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = OTPSerializer(data=request.data)
-        if serializer.is_valid:
-            phone = serializer.validated_data["phone"]
+        if serializer.is_valid():
+            phone = str(serializer.validated_data["phone"])
 
             send_otp_task.delay(phone) 
 
