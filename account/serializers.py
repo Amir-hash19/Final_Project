@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import Group
 from .models import CustomUser
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 
@@ -37,3 +38,8 @@ class CreateStudentSerializer(serializers.ModelSerializer):
         user.set_unusable_password()
         user.save()
         return user
+
+
+
+class OTPSerializer(serializers.Serializer):
+    phone = PhoneNumberField(unique=True,region="IR")
