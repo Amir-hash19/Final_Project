@@ -68,40 +68,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     )
     gender = models.CharField(max_length=20, choices=GENDER_TYPES, null=True, blank=True)
 
-   
-    ROLE_CHOICES = (
-        ("teacher", "Teacher"),
-        ('student', 'Student'),
-        ('support', 'Support'),
-        ('admin', 'Admin'),
-    )
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
-    SUPPORT_SUB_ROLE_CHOICES = (
-        ("technical_support", "Technical Support"),
-        ("ticket_service", "Ticket Service"),
-        ("billing_support", "Billing Support"),
-        ("blog_support", "Blog Support"),
-    )
-
-    
-    sub_role = models.CharField(max_length=50, choices=SUPPORT_SUB_ROLE_CHOICES, null=True, blank=True)
     
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'username'  # برای کاربران عادی
-    REQUIRED_FIELDS = ['phone', 'email']  # برای createsuperuser
+    USERNAME_FIELD = 'phone' 
+    REQUIRED_FIELDS = ['username', 'email']  
 
-
-
-    def save(self, *args, **kwargs):
-        if self.role != 'support' and self.sub_role:
-            self.sub_role = None  
-
-        super().save(*args, **kwargs)  
-
-
-    
 
 
     def __str__(self):

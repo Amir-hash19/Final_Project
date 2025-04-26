@@ -2,32 +2,35 @@ from rest_framework.generics import CreateAPIView, ListAPIView
 from .permissions import GroupPermission
 from .models import CustomUser
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import CreateStudentSerializer, OTPSerializer, VerifyOTPSerializer
+from .serializers import CreateAccountSerializer, OTPSerializer, VerifyOTPSerializer, CreateSupportAdminSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from .tasks import send_otp_task
+from .tasks import send_otp_task, send_welcome_sms_task
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.cache import cache
 from rest_framework.throttling import AnonRateThrottle
 from .OTPthrottling import OTPThrottle
 from django.contrib.auth import get_user_model
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 
 
 
-
-
+@method_decorator(csrf_exempt, name='dispatch')
 class RegisterAccountView(APIView):
     permission_classes = [AllowAny]
-
     def post(self, request):
-        serializer = CreateStudentSerializer(data=request.data)
+        serializer = CreateAccountSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
 
+            send_welcome_sms_task.delay(str(user.phone), user.first_name)
+
             refresh = RefreshToken.for_user(user)
+          
             return Response({
                 "user": serializer.data,
                 "refresh": str(refresh),
@@ -40,7 +43,7 @@ class RegisterAccountView(APIView):
 
 
 
-class SendOTPView(APIView):
+class SendOTPLogInView(APIView):
     permission_classes = [AllowAny]
     throttle_classes = [OTPThrottle]
     def post(self, request):
@@ -64,7 +67,7 @@ class SendOTPView(APIView):
 
 
 MAX_FAILED_ATTEMPTS = 5
-BLOCK_TIME_SECONDS = 300  # 5 دقیقه
+BLOCK_TIME_SECONDS = 300  
 
 class VerifyOTPView(APIView):
     permission_classes = [AllowAny]
@@ -84,10 +87,10 @@ class VerifyOTPView(APIView):
 
             cached_otp = cache.get(f"otp:{phone}")
             if cached_otp and str(cached_otp) == otp:
-                cache.delete(f"otp:{phone}")  # پاک کردن OTP موفق
-                cache.delete(fail_key)  # پاک کردن شمارنده تلاش ناموفق
+                cache.delete(f"otp:{phone}")  
+                cache.delete(fail_key)  
 
-                # ✅ ساخت JWT token
+             
                 user = get_user_model().objects.filter(phone=phone).first()
                 if not user:
                     return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
@@ -111,6 +114,17 @@ class VerifyOTPView(APIView):
 
 
 
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        request.user.auth_token.delete()
+        return Response({"detail": "Token deleted successfully"})
 
 
 
+
+
+class CreateSupportAdminView(CreateAPIView):
+    queryset = CustomUser.objects.all()
+    permission_classes = [IsAuthenticated, GroupPermission("SupportPanel", "SuperUser")]
+    serializer_class = CreateSupportAdminSerializer

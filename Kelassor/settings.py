@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
+import kavenegar
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -131,7 +132,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',  # استفاده از JWT
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "otp": "5/min",
+        "otp": "5/hour",
         }
 
 }    
@@ -152,6 +153,17 @@ KAVENEGAR_SENDER = config('KAVENEGAR_SENDER')
 
 
 
+
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+
+
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
 
 
 

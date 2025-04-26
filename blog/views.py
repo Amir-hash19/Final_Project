@@ -11,7 +11,7 @@ from account.permissions import GroupPermission
 class UploadBlogView(CreateAPIView):
     queryset = Blog.objects.all()
     serializer_class = UploadBlogSerializer
-    permission_classes = [IsAuthenticated, GroupPermission('SupportPanel', 'SuperUser')]
+    permission_classes = [IsAuthenticated, GroupPermission('SupportPanel')]
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
