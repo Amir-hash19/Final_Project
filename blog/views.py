@@ -3,9 +3,13 @@ from . models import Blog, CategoryBlog
 from .serializers import UploadBlogSerializer, DeleteBlogSerializer, ListBlogSerializer, BlogCategorySerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from account.permissions import GroupPermission
+from rest_framework.pagination import PageNumberPagination
 
 
 
+
+class CustomPagination(PageNumberPagination):
+    page_size = 40
 
 
 class UploadBlogView(CreateAPIView):
@@ -58,6 +62,7 @@ class ListBlogView(ListAPIView):
     queryset = Blog.objects.all()
     permission_classes = [AllowAny]
     serializer_class = ListBlogSerializer
+    pagination_class = CustomPagination
 
 
 
@@ -75,7 +80,7 @@ class DetailBlogView(RetrieveAPIView):
 
 
 
-
+#بروزرسانی مقالات توسط تیم پنل و سوپریوزر
 class UpdateBlogView(UpdateAPIView):
     queryset = Blog.objects.all()
     permission_classes = [IsAuthenticated, GroupPermission("SupportPanel", "SuperUser")]
