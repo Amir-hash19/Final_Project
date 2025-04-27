@@ -143,7 +143,7 @@ class CreateSupportAdminView(CreateAPIView):
 #سوپریوز میتونه اکانت بقیه رو پاک کنه 
 class DeleteSupportAdminView(DestroyAPIView):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsAuthenticated, GroupPermission("SupportPanel", "SuperUser")]
+    permission_classes = [IsAuthenticated, GroupPermission("SuperUser")]
     serializer_class = DeleteAccountSerializer
 
     def perform_destroy(self, instance):
@@ -183,6 +183,6 @@ class AccountDetailsView(RetrieveUpdateAPIView):
 
 class ListSupportAccountView(ListAPIView):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsAuthenticated,GroupPermission("SuperUser")]
+    permission_classes = [IsAuthenticated,GroupPermission("SupportPanel", "SuperUser")]
     serializer_class = ListSupportPanelSerializer
     pagination_class = CustomPagination
