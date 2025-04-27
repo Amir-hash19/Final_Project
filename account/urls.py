@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (RegisterAccountView, SendOTPLogInView, VerifyOTPView, LogoutView,
-                    CreateSupportAdminView, DeleteSupportAdminView, DeleteAccount, AccountDetailsView)
+                    CreateSupportAdminView, DeleteSupportAdminView, DeleteAccount, AccountDetailsView, ListSupportAccountView)
 
 
 
@@ -13,5 +13,7 @@ urlpatterns = [
     path("add-superser/", CreateSupportAdminView.as_view(), name="create-superuser"),
     path("delete-account/<int:pk>", DeleteSupportAdminView.as_view(), name="delete-account"),#کاربر پنل یا سوپریوزر
     path("delete-account-normal/", DeleteAccount.as_view(), name="delete-account-normal"),# کاربر عادی
-    path("account-info/", AccountDetailsView.as_view(), name="account-info")#کاربر عادی
+    path("account-info/", AccountDetailsView.as_view(), name="account-info"),#کاربر عادی
+    path("list-accounts-panel/", ListSupportAccountView.as_view(), name="list-support-account")#دیدن اکانت های پنل سایت
 ]
+

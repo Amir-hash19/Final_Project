@@ -183,6 +183,6 @@ class AccountDetailsView(RetrieveUpdateAPIView):
 
 class ListSupportAccountView(ListAPIView):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsAuthenticated,GroupPermission("SupportPanel", "SuperUser")]
+    permission_classes = [IsAuthenticated,GroupPermission("SuperUser")]
     serializer_class = ListSupportPanelSerializer
     pagination_class = CustomPagination
