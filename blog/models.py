@@ -16,7 +16,7 @@ class CategoryBlog(models.Model):
 class Blog(models.Model):
     content = models.TextField()
     title = models.CharField(max_length=100)
-    user = models.ForeignKey(to=CustomUser, on_delete=models.PROTECT)
+    user = models.ForeignKey(to=CustomUser, on_delete=models.SET_NULL, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True)
     
