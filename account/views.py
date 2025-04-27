@@ -1,8 +1,8 @@
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView, RetrieveUpdateAPIView
 from .permissions import GroupPermission
 from .models import CustomUser
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import CreateAccountSerializer, OTPSerializer, VerifyOTPSerializer, CreateSupportAdminSerializer
+from .serializers import CreateAccountSerializer, OTPSerializer, VerifyOTPSerializer, CreateSupportAdminSerializer, DeleteAccountSerializer, DetailsAccountSerializer, ListSupportPanelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework import status
@@ -15,7 +15,13 @@ from .OTPthrottling import OTPThrottle
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from rest_framework.exceptions import ValidationError
+from rest_framework.pagination import PageNumberPagination
 
+
+
+class CustomPagination(PageNumberPagination):
+    page_size = 20
 
 
 
@@ -124,7 +130,59 @@ class LogoutView(APIView):
 
 
 
+
 class CreateSupportAdminView(CreateAPIView):
     queryset = CustomUser.objects.all()
     permission_classes = [IsAuthenticated, GroupPermission("SupportPanel", "SuperUser")]
     serializer_class = CreateSupportAdminSerializer
+
+
+
+
+
+#سوپریوز میتونه اکانت بقیه رو پاک کنه 
+class DeleteSupportAdminView(DestroyAPIView):
+    queryset = CustomUser.objects.all()
+    permission_classes = [IsAuthenticated, GroupPermission("SupportPanel", "SuperUser")]
+    serializer_class = DeleteAccountSerializer
+
+    def perform_destroy(self, instance):
+        if self.request.user == instance:
+            raise ValidationError("You Cannot delete own account from here")
+        instance.delete()
+        
+
+
+
+
+
+
+class DeleteAccount(DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = DeleteAccountSerializer
+
+    def get_object(self):
+        return self.request.user
+        
+    
+
+
+#برای کاربر عادی هستش
+class AccountDetailsView(RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = DetailsAccountSerializer
+    
+    def get_object(self):
+        return self.request.user
+        
+
+
+
+
+
+
+class ListSupportAccountView(ListAPIView):
+    queryset = CustomUser.objects.all()
+    permission_classes = [IsAuthenticated,GroupPermission("SupportPanel", "SuperUser")]
+    serializer_class = ListSupportPanelSerializer
+    pagination_class = CustomPagination
