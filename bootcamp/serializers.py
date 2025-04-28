@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from .models import Bootcamp, BootcampCategory, BootcampRegistration
-
-
+from rest_framework import serializers
+from account.models import CustomUser
 
 
 class BootCampCategorySerializer(ModelSerializer):
@@ -60,9 +60,31 @@ class EditRegisterBootCampSerializer(ModelSerializer):
         model = BootcampRegistration
         fields = "__all__"
         read_only_fields = ('volunteer', 'reviewed_by', 'reviewed_at', 'registered_at')
+        
 
 
     def create(self, validated_data):
         validated_data["reviewed_by"] = self.context["request"].user
         return super().create(validated_data)
        
+
+
+
+
+
+
+class RegistrationBootCampSerializer(ModelSerializer):
+    
+    class Meta:
+        model = BootcampRegistration
+        fields = ["bootcamp", "payment_type", "comment", "phone_number", "slug"]
+        read_only_fields = ('reviewed_by', 'reviewed_at', 'registered_at', 'status', "volunteer")
+
+
+    def create(self, validated_data):
+          validated_data["volunteer"] = self.context["request"].user
+          return super().create(validated_data)
+
+    
+
+

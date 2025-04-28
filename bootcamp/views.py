@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework import status
 from account.permissions import GroupPermission
 from .serializers import( BootCampCategorySerializer, BootCampSerializer, ListBootCampSerializer, 
-RegisterBootCampSerializer, AdminRegisterBootCampSerializer, EditRegisterBootCampSerializer)
+RegisterBootCampSerializer, AdminRegisterBootCampSerializer, EditRegisterBootCampSerializer, RegistrationBootCampSerializer)
 from account.views import CustomPagination
 
 
@@ -90,14 +90,15 @@ class ListAvailableBootCamp(ListAPIView):
 
 #ازاد برای همه 
 class CreateRegisterBootCampView(CreateAPIView):
-    queryset = BootcampRegistration.objects.all()
-    permission_classes = [AllowAny]
-    serializer_class = RegisterBootCampSerializer
+    queryset = BootcampRegistration.objects.all()# یه سیگنال برای این بنویس 
+    permission_classes = [IsAuthenticated]
+    serializer_class = RegistrationBootCampSerializer
 
 
 
 
 
+#فقط برای درخواست های بررسی نشده هستش این ویو 
 class ListRegisterBootCampView(ListAPIView):
     queryset = BootcampRegistration.objects.filter(status="pending")
     permission_classes = [IsAuthenticated, GroupPermission("SupportPanel")]
@@ -111,7 +112,7 @@ class ListRegisterBootCampView(ListAPIView):
 class EditRegisterBootCampView(UpdateAPIView):
     queryset = BootcampRegistration.objects.filter(status="pending")
     permission_classes = [IsAuthenticated, GroupPermission("SupportPanel")]
-    serializer_class = EditRegisterBootCampSerializer
+    serializer_class = EditRegisterBootCampSerializer#درسته
 
 
 

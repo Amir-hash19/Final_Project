@@ -78,7 +78,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
     def __str__(self):
-        return self.username or str(self.phone) or self.email or "User"
+        return f"{self.first_name} - {self.last_name}" 
 
 
 
