@@ -23,6 +23,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'anymail',
     'rest_framework',
     'rest_framework_simplejwt',
     'django.contrib.admin',
@@ -178,3 +179,16 @@ CACHES = {
         }
     }
 }
+
+
+
+ANYMAIL ={
+    'SENDGRID_API_KEY': ""
+}
+
+
+
+
+EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+DEFAULT_FROM_EMAIL = "amirhosein.hydri1381@gmail.com"
+ADMIN_EMAIL = "amirhosein.hydri1381@gmail.com"

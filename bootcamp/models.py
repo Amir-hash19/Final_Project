@@ -74,5 +74,23 @@ class BootcampRegistration(models.Model):
     slug = models.SlugField(unique=True)
 
 
-    def __str__(self):
+    def __str__(self): 
         return f"{self.status}"
+    
+
+
+
+
+class SMSLog(models.Model):
+    phone_number = models.CharField(max_length=20)
+    full_name = models.CharField(max_length=100)
+    STATUS_SMS = (
+        ("success", "Success"),
+        ("unsuccess", "Unsuccess")
+    )
+    status = models.CharField(max_length=100, choices=STATUS_SMS)
+    response_message = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"SMS to {self.phone_number} - {self.status}"
