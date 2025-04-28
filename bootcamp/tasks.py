@@ -15,7 +15,7 @@ api = KavenegarAPI(settings.KAVENEGAR_API_KEY)
 @shared_task(bind=True, max_retries=3, default_retry_delay=5, ignore_result=True)
 def send_sms_to_user(self, phone, full_name):
     try:
-        message = f"{full_name} The result of your registration for just came! check website!"
+        message = f"{full_name} The result of your registration just came! check website please !"
         params = {
             "receptor":phone,
             "message":message,

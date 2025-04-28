@@ -33,8 +33,6 @@ class RegisterAccountView(APIView):
         if serializer.is_valid():
             user = serializer.save()
 
-            send_welcome_sms_task.delay(str(user.phone), user.first_name)
-
             refresh = RefreshToken.for_user(user)
           
             return Response({
