@@ -6,7 +6,8 @@ from account.permissions import GroupPermission
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-
+from django.http import FileResponse, Http404
+from rest_framework.views import APIView
 
 
 class CustomPagination(PageNumberPagination):
@@ -111,4 +112,17 @@ class EditBlogView(UpdateAPIView):
 
 
 
+
+
+class DownLoadBlog(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, pk):
+        try:
+            blog = Blog.objects.get(id=pk)
+        except Blog.DoesNotExist:
+            raise Http404("Blog Does not exist!")
+
+
+        return FileResponse(Blog.file.open('rb'), as_attachment=True, filename=Blog.file.name.split('/')[-1])    
 
