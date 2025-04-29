@@ -1,5 +1,6 @@
 from django.db import models
 from account.models import CustomUser
+from django.core.exceptions import ValidationError
 
 
 
@@ -31,6 +32,11 @@ class Payment(models.Model):
     paid_at = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
 
+    def clean(self):
+        super().clean()
+        if self.method == "offline" and not self.tracking_code and not self.receipt_image:
+            raise ValidationError("User must upload tracking code and receipt_images!")
+        
     # Only for offline
     tracking_code = models.CharField(max_length=100, blank=True, null=True)
     receipt_image = models.ImageField(upload_to='receipts/', blank=True, null=True)

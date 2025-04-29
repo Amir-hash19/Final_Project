@@ -88,3 +88,16 @@ class RegistrationBootCampSerializer(ModelSerializer):
     
 
 
+class BootcampRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BootcampRegistration
+        fields = '__all__'
+
+    def validate(self, attrs):
+        payment_type = attrs.get('payment_type')
+        installment_count = attrs.get('installment_count')
+
+        if payment_type == 'installment_pay' and not installment_count:
+            raise serializers.ValidationError("if you choise installment pay you must mention the count of the payment!")
+        
+        return attrs

@@ -68,3 +68,7 @@ def send_SMS_to_admin_for_registration(self, phone_admin, name_admin):
         except Retry:
             return {"status":"failed", "reason":str(e)}
              
+
+
+
+

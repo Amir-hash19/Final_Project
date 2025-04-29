@@ -1,7 +1,7 @@
 from phonenumber_field.modelfields import PhoneNumberField
 from account.models import CustomUser
 from django.db import models
-
+from django.core.exceptions import ValidationError
 
 
 
@@ -58,6 +58,13 @@ class BootcampRegistration(models.Model):
         ("safte", "Safte"),
     )
     payment_type = models.CharField(max_length=30, choices=PAYMENT_STATUS_CHOICES, default="check")
+    installment_count = models.PositiveIntegerField(null=True, blank=True)
+
+    def clean(self):
+        super().clean()
+        if self.payment_type == "installment_pay" and not self.installment_count:
+            raise ValidationError("Users must mentaion the count of the installment pay!")
+        
     registered_at = models.DateTimeField(auto_now_add=True)
 
     REGISTRATION_STATUS_CHOICES = (
