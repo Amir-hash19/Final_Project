@@ -68,27 +68,23 @@ class VerifyOTPSerializer(serializers.Serializer):
 
 
 class CreateSupportAdminSerializer(serializers.ModelSerializer):
-    group = serializers.CharField(default="SupportPanel", required=False)  
 
     class Meta:
         model = CustomUser
         fields = "__all__"
 
-    def create(self, validated_data):
-        group_name = validated_data.pop('group', 'SupportPanel')  
-        user = CustomUser.objects.create(**validated_data)
 
-        try:
-            group, created = Group.objects.get_or_create(name=group_name)
-            user.groups.add(group) 
-        except Exception as e:
-            raise serializers.ValidationError(f"Error adding group: {str(e)}")  
 
-        # ذخیره کردن کاربر
-        user.save()
 
-        return user
-    
+
+
+
+
+
+
+
+
+
 
 
 

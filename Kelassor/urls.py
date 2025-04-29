@@ -7,4 +7,5 @@ urlpatterns = [
     path("login-signup/", include("account.urls")),
     path("blogs/", include("blog.urls")),
     path("bootcamps/", include("bootcamp.urls")),
+    path("feedbacks/", include("support.urls")),
 ]

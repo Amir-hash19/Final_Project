@@ -1,4 +1,4 @@
-from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView, RetrieveUpdateAPIView, UpdateAPIView
 from .permissions import GroupPermission
 from .models import CustomUser
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -17,8 +17,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
-
-
+from django.contrib.auth.models import Group
+from rest_framework.exceptions import PermissionDenied
+from rest_framework import serializers
 
 class CustomPagination(PageNumberPagination):
     page_size = 20
@@ -130,10 +131,30 @@ class LogoutView(APIView):
 
 
 
-class CreateSupportAdminView(CreateAPIView):
+class AssignSupportPanelPermissionView(UpdateAPIView):
     queryset = CustomUser.objects.all()
     permission_classes = [IsAuthenticated, GroupPermission("SupportPanel", "SuperUser")]
     serializer_class = CreateSupportAdminSerializer
+
+    def perform_update(self, serializer):
+        user_id = self.kwargs.get("pk")
+        try:
+            user_update = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            raise PermissionDenied(f"The User with ID {user_id} Does not exist!")    
+        
+        user_update.is_staff=True
+
+        group_name = "supportPanel"
+        try:
+            group, created = Group.objects.get_or_create(name=group_name)
+            user_update.groups.add(group)
+        except Exception as e:
+            raise serializers.ValidationError(f"Error adding group: {str(e)}")
+
+        user_update.save() 
+
+        
 
 
 

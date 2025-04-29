@@ -35,6 +35,7 @@ class TicketMessage(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     attachment = models.FileField(upload_to='ticket_attachments/', null=True, blank=True)
     slug = models.SlugField(unique=True)
+    # title = models.CharField(max_length=50, null=True, blank=True)# برای اینکه ادمین مشخص کنه این پیام موضوعش چی بوده
 
     def __str__(self):
         return f"{self.slug}"
