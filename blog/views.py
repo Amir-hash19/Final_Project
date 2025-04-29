@@ -4,7 +4,8 @@ from .serializers import UploadBlogSerializer, DeleteBlogSerializer, ListBlogSer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from account.permissions import GroupPermission
 from rest_framework.pagination import PageNumberPagination
-
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 
@@ -12,15 +13,16 @@ class CustomPagination(PageNumberPagination):
     page_size = 40
 
 
+
 class UploadBlogView(CreateAPIView):
     queryset = Blog.objects.all()
     serializer_class = UploadBlogSerializer
     permission_classes = [IsAuthenticated, GroupPermission("SupportPanel", "SuperUser")]
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
+    def perform_create(self, serializer):
+        serializer.save(
+            user = self.request.user
+        )
 
 
 
@@ -30,15 +32,19 @@ class UploadBlogView(CreateAPIView):
 class AddCategoryBlogView(CreateAPIView):
     queryset = CategoryBlog.objects.all()
     permission_classes = [IsAuthenticated, GroupPermission("SuperUser", "SupportPanel")]
+    serializer_class = BlogCategorySerializer
 
 
 
 
 
 class DeleteBlogView(DestroyAPIView):
-    queryset = Blog.objects.all()
     permission_classes = [IsAuthenticated, GroupPermission("SupportPanel", "SuperUser")]
     serializer_class = DeleteBlogSerializer
+
+    def get_queryset(self):
+        return Blog.objects.filter(user=self.request.user)
+        
 
 
 
@@ -63,6 +69,11 @@ class ListBlogView(ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = ListBlogSerializer
     pagination_class = CustomPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    search_fields = ["title", "content"]
+    filterset_fields = ["blogcategory", "user"]
+    ordering_fields = ["uploaded_at"]
+
 
 
 
@@ -83,12 +94,20 @@ class DetailBlogView(RetrieveAPIView):
 #بروزرسانی مقالات توسط تیم پنل و سوپریوزر
 class UpdateBlogView(UpdateAPIView):
     queryset = Blog.objects.all()
-    permission_classes = [IsAuthenticated, GroupPermission("SupportPanel", "SuperUser")]
+    permission_classes = [IsAuthenticated, GroupPermission("SuperUser")]
     serializer_class = ListBlogSerializer
 
 
 
 
+
+class EditBlogView(UpdateAPIView):
+    permission_classes = [IsAuthenticated, GroupPermission("SupportPanel")]
+    serializer_class = ListBlogSerializer
+
+
+    def get_queryset(self):
+        return Blog.objects.filter(user=self.request.user)
 
 
 

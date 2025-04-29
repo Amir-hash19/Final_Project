@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'anymail',
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -138,6 +139,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
 }    
 
 
@@ -192,3 +195,25 @@ ANYMAIL ={
 EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
 DEFAULT_FROM_EMAIL = "amirhosein.hydri1381@gmail.com"
 ADMIN_EMAIL = "amirhosein.hydri1381@gmail.com"
+
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',  # فقط خطاها به فایل ذخیره می‌شوند
+            'class': 'logging.FileHandler',
+            'filename': 'error_log.txt',  # مسیر فایل لاگ
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],  # ارسال به فایل
+            'level': 'ERROR',  # سطح لاگ‌ها
+            'propagate': True,
+        },
+    },
+}

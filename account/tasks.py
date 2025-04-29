@@ -24,7 +24,7 @@ def send_otp_task(self, phone):
             "message":f"Your OTP code is: {otp}"
         }
         response = api.sms_send(params)
-        print(f"OTP for {phone}: {otp}, SMS sent successfully this is only credit for 2minutes!")
+        print(f"OTP for {phone}: {otp}, SMS sent successfully, this is only credit for 2minutes!")
         return otp
     except Exception as e:
         raise self.retry(exc=e)

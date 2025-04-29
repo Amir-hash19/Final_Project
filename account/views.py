@@ -46,22 +46,23 @@ class RegisterAccountView(APIView):
 
 
 
-
 class SendOTPLogInView(APIView):
     permission_classes = [AllowAny]
-    throttle_classes = [OTPThrottle]
+    throttle_classes = [OTPThrottle]  # استفاده از throttle برای محدود کردن درخواست‌ها
+
     def post(self, request):
-        serializer = OTPSerializer(data=request.data)
-        if serializer.is_valid():
-            phone = str(serializer.validated_data["phone"])
+        serializer = OTPSerializer(data=request.data)  # گرفتن داده‌ها از درخواست
 
-            send_otp_task.delay(phone) 
+        if serializer.is_valid():  # بررسی معتبر بودن داده‌ها
+            phone = str(serializer.validated_data["phone"])  # گرفتن شماره موبایل از داده‌های معتبر
 
+            # ارسال OTP از طریق تسک
+            send_otp_task.delay(phone)  # فرض می‌کنیم send_otp_task در tasks.py تعریف شده
 
             return Response({"message": "OTP sent successfully"}, status=status.HTTP_200_OK)
-        
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 

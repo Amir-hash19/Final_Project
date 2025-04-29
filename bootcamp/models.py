@@ -69,10 +69,10 @@ class BootcampRegistration(models.Model):
     status = models.CharField(max_length=20, choices=REGISTRATION_STATUS_CHOICES, default="pending")
     reviewed_at = models.DateTimeField(null=True, blank=True)
     reviewed_by = models.ForeignKey(to=CustomUser, null=True, blank=True, on_delete=models.SET_NULL, related_name='reviewed_enrollments')
-    comment = models.TextField(blank=True)
+    comment = models.TextField(blank=True)#برای کاربر برای توضیحاتش
     phone_number = PhoneNumberField(region='IR', unique=True)
     slug = models.SlugField(unique=True)
-
+    # admin_comment = models.TextField()# برای ادمین پنل که توضیحاتش رو بزار 
 
     def __str__(self): 
         return f"{self.status}"
