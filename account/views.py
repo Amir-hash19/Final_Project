@@ -20,6 +20,8 @@ from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth.models import Group
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import serializers
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 class CustomPagination(PageNumberPagination):
     page_size = 20
@@ -170,11 +172,8 @@ class DeleteSupportAdminView(DestroyAPIView):
         if self.request.user == instance:
             raise ValidationError("You Cannot delete own account from here")
         instance.delete()
+
         
-
-
-
-
 
 
 class DeleteAccount(DestroyAPIView):
@@ -206,3 +205,9 @@ class ListSupportAccountView(ListAPIView):
     permission_classes = [IsAuthenticated,GroupPermission("SupportPanel", "SuperUser")]
     serializer_class = ListSupportPanelSerializer
     pagination_class = CustomPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    search_fields = ["date_created", "phone", "username"]
+    filterset_fields = ["date_created", "birthday"]
+    ordering_fields = ["-date_created"]
+    
+    

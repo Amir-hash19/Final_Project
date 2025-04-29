@@ -5,14 +5,24 @@ from account.models import CustomUser
 from .tasks import send_notify_admin_for_ticket
 
 
+
 @receiver(post_save, sender=Ticket)
 def norify_admin_for_ticket(sender, created, instance, **kwargs):
     if created:
-        admin_panel = CustomUser.objects.filter(group="SupportPanel").first()
-        phone = admin_panel.phone
-        name = admin_panel.last_name
+        admins = CustomUser.objects.filter(groups__name="SupportPanel")
 
-        send_notify_admin_for_ticket.delay(phone, name)
+        if admins.exists():
+            for admin in admins:
+                phone = admin.phone
+                name = admin.last_name
+
+                send_notify_admin_for_ticket.delay(phone, name)
+        else:
+            print("no admin found for sending notification")
+
+       
+
+        
         
         
 

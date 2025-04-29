@@ -185,16 +185,11 @@ CACHES = {
 
 
 
-ANYMAIL ={
-    'SENDGRID_API_KEY': ""
-}
 
 
-
-
-EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
-DEFAULT_FROM_EMAIL = "amirhosein.hydri1381@gmail.com"
-ADMIN_EMAIL = "amirhosein.hydri1381@gmail.com"
+# EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+# DEFAULT_FROM_EMAIL = "amirhosein.hydri1381@gmail.com"
+# ADMIN_EMAIL = "amirhosein.hydri1381@gmail.com"
 
 
 
@@ -217,3 +212,13 @@ LOGGING = {
         },
     },
 }
+
+
+
+
+CELERY_BEAT_SCHEDULE = {
+    'check-tickets-every-day': {
+        'task': 'tickets.tasks.check_and_update_ticket_status',
+        'schedule': 86400.0,
+    },
+}    

@@ -47,7 +47,7 @@ def send_welcome_sms_task(self, user_phone_number, first_name):
     try:
         params = {
             'receptor': user_phone_number,  
-            'message': f"Welcome and tnx for signup {first_name}",  
+            'message': f"Welcome and tnx for SigningUp {first_name}",  
             'sender': "2000660110",  
         }
         response = client.sms_send(params)  
