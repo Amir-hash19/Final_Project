@@ -6,7 +6,7 @@ from .tasks import send_notify_admin_for_ticket
 
 
 
-@receiver(post_save, sender=Ticket)
+@receiver(post_save, sender=TicketMessage)
 def norify_admin_for_ticket(sender, created, instance, **kwargs):
     if created:
         admins = CustomUser.objects.filter(groups__name="SupportPanel")
