@@ -4,6 +4,12 @@ from django.db.models import Sum
 from .models import *
 from .tasks import call_user_for_invoice_task
 
+
+
+
+
+
+
 @receiver(post_save, sender=Payment)
 def update_ispaid(sender, instance, **kwargs):
     invoice = instance.invoice
@@ -30,3 +36,18 @@ def notify_invoice_for_client(sender, created ,instance, **kwargs):
     call_user_for_invoice_task.delay(user_phone, last_name, amount)
 
 
+
+
+
+@receiver(post_save, sender=Payment)
+def create_transctioon_on_payment_verified(sender, instance, created, **kwargs):
+
+    if instance.is_verified and not created:
+
+        Transaction.objects.create(
+            user=instance.user,
+            amount=instance.amount,
+            description=f"Payment for Invoice ID {instance.invoice.id}",
+            transaction_type='debit',
+            is_verified=instance.is_verified
+        )

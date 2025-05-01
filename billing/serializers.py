@@ -47,3 +47,11 @@ class PaymentSerializer(ModelSerializer):
                 raise serializers.ValidationError("receipt_image must be uploaded!")
         return attrs    
         
+
+
+
+class PaymentListSerializer(ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = "__all__"
+       

@@ -61,4 +61,7 @@ class Transaction(models.Model):
         return f"{self.transaction_type}"
     
 
-    
+
+
+class Wallet(models.Model):
+    pass
