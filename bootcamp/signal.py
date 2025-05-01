@@ -25,14 +25,15 @@ def call_admin_for_Registration(sender, created, instance, **kwargs):
         phone_admin = str(instance.reviewed_by.phone)
         name_admin = instance.reviewed_by.last_name
         try:
-            send_SMS_to_admin_for_registration.delay(phone_admin, name_admin)
+            send_SMS_to_admin_for_registration.delay(phone_admin, name_admin)#مشکل داره
+            
             return f"the message has been sent to {name_admin}"
         except Exception:
             return f"Something went wrong!"
         
 
 
-        
+
 
 
 @receiver(post_save, sender=BootcampRegistration)
